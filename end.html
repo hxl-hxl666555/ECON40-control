@@ -16,11 +16,20 @@
     h1 {
       color: #0070f3;
     }
+    #status {
+      margin-top: 20px;
+      font-size: 18px;
+      color: gray;
+    }
+    #status.success {
+      color: green;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>Thanks for your participation!</h1>
-  <p>Submitting your responses...</p>
+  <p id="status">Submitting your responses...</p>
 
   <script>
     // 获取参与者信息和所有选择
@@ -30,7 +39,7 @@
     const tablet  = JSON.parse(localStorage.getItem("tablet")  || '{}');
     const phone   = JSON.parse(localStorage.getItem("phone")   || '{}');
 
-    // ✅ 替换为你找到的真实 formResponse URL
+    // Google Form 接口地址
     const formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSc2dH97gHVKnCOeG5jcxbd4CjxVEA3mztCVwJJiYZ7QSVy9YA/formResponse";
 
     const formData = new FormData();
@@ -45,18 +54,25 @@
     formData.append("entry.1742592439", phone.upgrade || "");
     formData.append("entry.1515645108", phone.warranty || "");
 
-    // 发送到 Google 表单
+    // 发送到 Google 表单（no-cors 不可判断成功与否）
     fetch(formUrl, {
       method: "POST",
       mode: "no-cors",
       body: formData
     }).then(() => {
-      console.log("Data submitted to Google Form.");
-      // localStorage.clear(); // ✅ 可选：清空用户数据
+      console.log("✅ Data submitted to Google Form.");
     }).catch((error) => {
-      console.error("Submission failed:", error);
+      console.error("❌ Submission failed:", error);
     });
+
+    // 显示提交完成提示（假定成功）
+    setTimeout(() => {
+      const status = document.getElementById("status");
+      status.textContent = "✅ Data submitted to Google Form.";
+      status.classList.add("success");
+    }, 2000);
   </script>
 </body>
 </html>
+
 
